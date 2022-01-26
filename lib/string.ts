@@ -28,7 +28,9 @@ type SplitHelper<
 > = S extends `${infer Char}${SplitStr}${infer Rest}`
   ? SplitHelper<Rest, SplitStr, array.Push<A, Char>>
   : S extends string
-  ? array.Push<A, S>
+  ? S extends ""
+    ? A
+    : array.Push<A, S>
   : never
 
 type Split<S extends string, SplitStr extends string = ""> = SplitHelper<
@@ -36,6 +38,11 @@ type Split<S extends string, SplitStr extends string = ""> = SplitHelper<
   SplitStr
 >
 
-type GetStringLength<S extends string> = Split<S>['length']
+type GetStringLength<S extends string> = Split<S>["length"]
 
-export type { Stringify, GetChars, Split, GetStringLength }
+type CharAt<S extends string, I extends number> = Split<S>[I]
+
+type Concat<S1 extends string, S2 extends string> = `${S1}${S2}`
+
+
+export type { Stringify, GetChars, Split, GetStringLength, CharAt, Concat }
