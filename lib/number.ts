@@ -1,5 +1,6 @@
 import * as common from "./common"
 import * as string from "./string"
+import * as array from "./array"
 
 type NumberLike = number | `${number}`
 /**
@@ -44,4 +45,33 @@ type IsInt<
   OnlyCheckPoint extends boolean = true
 > = common.ConditionReverse<IsFloat<T, OnlyCheckPoint>>
 
-export type { NumberLike, IsZero, IsOverZero, IsLessZero, IsFloat, IsInt }
+/**
+ * 两个number类型是否相等
+ */
+type IsEqual<
+  L extends NumberLike,
+  R extends NumberLike,
+  Strict extends boolean = true
+> = Strict extends true
+  ? common.CheckLeftIsExtendsRight<L, R>
+  : common.CheckLeftIsExtendsRight<string.Stringify<L>, string.Stringify<R>>
+
+/**
+ * 整数加法，A1，A2最大999
+ * @see https://juejin.cn/post/7050893279818317854#heading-8
+ */
+type IntAddSingle<A1 extends number, A2 extends number> = [
+  ...array.GetTuple<A1>,
+  ...array.GetTuple<A2>
+]["length"]
+
+export type {
+  NumberLike,
+  IsZero,
+  IsOverZero,
+  IsLessZero,
+  IsFloat,
+  IsInt,
+  IsEqual,
+  IntAddSingle,
+}
