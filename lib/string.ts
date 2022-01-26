@@ -1,9 +1,10 @@
+import * as common from "./common"
+import * as array from "./array"
+
 /**
  * 将支持的类型转化为字符串
  */
-type Stringify<
-  T extends string | number | bigint | boolean | null | undefined
-> = `${T}`
+type Stringify<T extends common.CanStringified> = `${T}`
 
 /**
  * 获取模板字符串类型中的字符
@@ -20,4 +21,21 @@ type GetCharsHelper<S, Acc> = S extends `${infer Char}${infer Rest}`
   ? GetCharsHelper<Rest, Char | Acc>
   : Acc
 
-export type { Stringify, GetChars }
+type SplitHelper<
+  S extends string,
+  SplitStr extends string = "",
+  A extends string[] = []
+> = S extends `${infer Char}${SplitStr}${infer Rest}`
+  ? SplitHelper<Rest, SplitStr, array.Push<A, Char>>
+  : S extends string
+  ? array.Push<A, S>
+  : never
+
+type Split<S extends string, SplitStr extends string = ""> = SplitHelper<
+  S,
+  SplitStr
+>
+
+type GetStringLength<S extends string> = Split<S>['length']
+
+export type { Stringify, GetChars, Split, GetStringLength }
