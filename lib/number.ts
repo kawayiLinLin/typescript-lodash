@@ -21,18 +21,18 @@ type IsOverZero<N extends NumberLike> = IsZero<N> extends true
 /**
  * number类型是否小于0
  */
-type IsLessZero<N extends NumberLike> = common.ConditionReverse<IsOverZero<N>>
+type IsLessZero<N extends NumberLike> = common.Not<IsOverZero<N>>
 
 /**
  * number类型是否是小数
  */
 type IsFloat<
-    N extends NumberLike,
+  N extends NumberLike,
   OnlyCheckPoint extends boolean = true
 > = string.Stringify<N> extends `${infer Left}${"."}${infer Right}`
   ? OnlyCheckPoint extends true
     ? true
-    : common.ConditionReverse<
+    : common.Not<
         common.CheckLeftIsExtendsRight<string.GetChars<Right>, "0">
       >
   : false
@@ -41,9 +41,9 @@ type IsFloat<
  * number类型是否是整数
  */
 type IsInt<
-N extends NumberLike,
+  N extends NumberLike,
   OnlyCheckPoint extends boolean = true
-> = common.ConditionReverse<IsFloat<N, OnlyCheckPoint>>
+> = common.Not<IsFloat<N, OnlyCheckPoint>>
 
 /**
  * 两个number类型是否相等
@@ -56,14 +56,37 @@ type IsEqual<
   ? common.CheckLeftIsExtendsRight<L, R>
   : common.CheckLeftIsExtendsRight<string.Stringify<L>, string.Stringify<R>>
 
+type IsNotEqual<
+  L extends NumberLike,
+  R extends NumberLike,
+  Strict extends boolean = true
+> = common.Not<IsEqual<L, R, Strict>>
+
+type IntAddSingleHepler<N1 extends number, N2 extends number> = [
+    ...array.GetTuple<N1>,
+    ...array.GetTuple<N2>
+  ]["length"]
+
 /**
  * 整数加法，A1，A2最大999
  * @see https://juejin.cn/post/7050893279818317854#heading-8
  */
-type IntAddSingle<N1 extends number, N2 extends number> = [
-  ...array.GetTuple<N1>,
-  ...array.GetTuple<N2>
-]["length"]
+type IntAddSingle<N1 extends number, N2 extends number> = IntAddSingleHepler<N1, N2> extends number ? IntAddSingleHepler<N1, N2> : number
+
+type CompareHelper<
+  N1 extends number,
+  N2 extends number,
+  A1 extends unknown[] = array.GetTuple<N1>,
+  A2 extends unknown[] = array.GetTuple<N2>
+> = IsNotEqual<N1, N2, true> extends true
+  ? common.Or<IsZero<A1["length"]>, IsZero<A2["length"]>> extends true
+    ? IsZero<A1["length"]> extends true
+      ? false
+      : true
+    : CompareHelper<array.Pop<A1>["length"], array.Pop<A2>["length"]>
+  : false
+
+type Compare<N1 extends number, N2 extends number> = CompareHelper<N1, N2>
 
 export type {
   NumberLike,
@@ -73,5 +96,7 @@ export type {
   IsFloat,
   IsInt,
   IsEqual,
+  IsNotEqual,
   IntAddSingle,
+  Compare
 }
