@@ -1,6 +1,4 @@
-import * as common from "./common"
-import * as array from "./array"
-import { number } from ".."
+import { number, string, array, common } from ".."
 
 /**
  * @exports
@@ -177,7 +175,81 @@ type RepeatHelper<
  * @exports
  * 重复 Times 次数的字符串
  */
-type Repeat<S extends string, Times extends number> = RepeatHelper<S, Times>
+type Repeat<S extends string, Times extends number = 1> = RepeatHelper<S, Times>
+
+type PadHelper<
+  S extends string,
+  N extends number = 0,
+  IsStart extends boolean = true,
+  Len extends number = GetStringLength<S>,
+  Offset extends number = Len
+> = number.Compare<N, Len> extends true
+  ? number.IsEqual<N, Offset> extends true
+    ? S
+    : PadHelper<
+        `${IsStart extends true ? " " : ""}${S}${IsStart extends false
+          ? " "
+          : ""}`,
+        N,
+        IsStart,
+        Len,
+        number.IntAddSingle<Offset, 1>
+      >
+  : S
+
+type PadStart<S extends string, N extends number = 0> = PadHelper<S, N>
+
+type PadEnd<S extends string, N extends number = 0> = PadHelper<S, N, false>
+
+/**
+ * @see https://juejin.cn/post/7045536402112512007#heading-5
+ */
+type TrimLeft<S extends string> = S extends `${
+  | " "
+  | "\t"
+  | "\n"}${infer RightRest}`
+  ? TrimLeft<RightRest>
+  : S
+
+type TrimRight<S extends string> = S extends `${infer LeftRest}${
+  | " "
+  | "\t"
+  | "\n"}`
+  ? TrimRight<LeftRest>
+  : S
+
+type Trim<S extends string> = TrimLeft<TrimRight<S>>
+
+type ToUppercase<S extends string> = Uppercase<S>
+
+type ToLowercase<S extends string> = Lowercase<S>
+
+type SubStrHelper<
+  S extends string,
+  From extends number,
+  Len extends number,
+  Offset extends number = 0,
+  Cache extends string[] = []
+> = number.IsEqual<Offset, Len> extends true
+  ? array.Join<Cache, "">
+  : SubStrHelper<
+      S,
+      From,
+      Len,
+      number.IntAddSingle<Offset, 1>,
+      common.And<
+        CharAt<S, Offset> extends string ? true : false,
+        number.IsEqual<Offset, From>
+      > extends true
+        ? array.Push<Cache, CharAt<S, Offset>>
+        : Cache
+    >
+
+type SubStr<
+  S extends string,
+  From extends number,
+  Len extends number
+> = SubStrHelper<S, From, Len>
 
 export type {
   Stringify,
@@ -194,4 +266,12 @@ export type {
   Replace,
   ReplaceAll,
   Repeat,
+  PadStart,
+  PadEnd,
+  TrimLeft,
+  TrimRight,
+  Trim,
+  ToUppercase,
+  ToLowercase,
+  SubStr,
 }

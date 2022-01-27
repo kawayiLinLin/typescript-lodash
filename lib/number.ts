@@ -32,9 +32,7 @@ type IsFloat<
 > = string.Stringify<N> extends `${infer Left}${"."}${infer Right}`
   ? OnlyCheckPoint extends true
     ? true
-    : common.Not<
-        common.CheckLeftIsExtendsRight<string.GetChars<Right>, "0">
-      >
+    : common.Not<common.CheckLeftIsExtendsRight<string.GetChars<Right>, "0">>
   : false
 
 /**
@@ -63,15 +61,20 @@ type IsNotEqual<
 > = common.Not<IsEqual<L, R, Strict>>
 
 type IntAddSingleHepler<N1 extends number, N2 extends number> = [
-    ...array.GetTuple<N1>,
-    ...array.GetTuple<N2>
-  ]["length"]
+  ...array.GetTuple<N1>,
+  ...array.GetTuple<N2>
+]["length"]
 
 /**
- * 整数加法，A1，A2最大999
+ * 正整数（和0）加法，A1，A2最大999
  * @see https://juejin.cn/post/7050893279818317854#heading-8
  */
-type IntAddSingle<N1 extends number, N2 extends number> = IntAddSingleHepler<N1, N2> extends number ? IntAddSingleHepler<N1, N2> : number
+type IntAddSingle<N1 extends number, N2 extends number> = IntAddSingleHepler<
+  N1,
+  N2
+> extends number
+  ? IntAddSingleHepler<N1, N2>
+  : number
 
 type CompareHelper<
   N1 extends number,
@@ -88,6 +91,24 @@ type CompareHelper<
 
 type Compare<N1 extends number, N2 extends number> = CompareHelper<N1, N2>
 
+type IntMinusSingleAbsHelper<
+  N1 extends number,
+  N2 extends number,
+  A1 extends unknown[] = array.GetTuple<N1>,
+  A2 extends unknown[] = array.GetTuple<N2>
+> = IsNotEqual<N1, N2, true> extends true
+  ? common.Or<IsZero<A1["length"]>, IsZero<A2["length"]>> extends true
+    ? IsZero<A1["length"]> extends true
+      ? A2['length']
+      : A1['length']
+    : IntMinusSingleAbsHelper<array.Pop<A1>["length"], array.Pop<A2>["length"]>
+  : 0
+
+type IntMinusSingleAbs<
+  N1 extends number,
+  N2 extends number
+> = IntMinusSingleAbsHelper<N1, N2>
+
 export type {
   NumberLike,
   IsZero,
@@ -98,5 +119,6 @@ export type {
   IsEqual,
   IsNotEqual,
   IntAddSingle,
-  Compare
+  IntMinusSingleAbs,
+  Compare,
 }
