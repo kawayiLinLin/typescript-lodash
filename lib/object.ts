@@ -1,10 +1,10 @@
 import * as common from "./common"
 
-type KeysToTuple<T extends object> = KeysToUnion<T>[]
+type KeysToTuple<T> = KeysToUnion<T>[]
 
-type KeysToUnion<T extends object> = keyof T
+type KeysToUnion<T> = keyof T
 
-type Values<T extends object> = T[KeysToUnion<T>]
+type Values<T> = T[KeysToUnion<T>]
 
 type ExtractValues<T, V> = {
   [Key in keyof T as T[Key] extends V ? Key : never]: T[Key]
