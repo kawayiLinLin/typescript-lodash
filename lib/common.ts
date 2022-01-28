@@ -6,6 +6,18 @@ type And<C1 extends boolean, C2 extends boolean> = C1 extends true
     : false
   : false
 
+type And3<C1 extends boolean, C2 extends boolean, C3 extends boolean> = And<
+  And<C1, C2>,
+  C3
+>
+
+type And4<
+  C1 extends boolean,
+  C2 extends boolean,
+  C3 extends boolean,
+  C4 extends boolean
+> = And<And3<C1, C2, C3>, C4>
+
 type Or<C1 extends boolean, C2 extends boolean> = C1 extends true
   ? true
   : C2 extends true
@@ -13,6 +25,15 @@ type Or<C1 extends boolean, C2 extends boolean> = C1 extends true
   : false
 
 type CheckLeftIsExtendsRight<T extends any, R extends any> = T extends R
+  ? true
+  : false
+
+/**
+ * https://github.com/microsoft/TypeScript/issues/27024#issuecomment-510924206
+ */
+type IsEqual<A, B> = (<T>() => T extends A ? 1 : 2) extends <
+  T1
+>() => T1 extends B ? 1 : 2
   ? true
   : false
 
@@ -29,9 +50,11 @@ type CanStringified = string | number | bigint | boolean | null | undefined
 export type {
   Not,
   And,
+  And3,
+  And4,
   Or,
-  Not,
   CheckLeftIsExtendsRight,
+  IsEqual,
   SafeCheck,
   Diff,
   SumAggregate,

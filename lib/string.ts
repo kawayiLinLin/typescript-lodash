@@ -220,36 +220,48 @@ type TrimRight<S extends string> = S extends `${infer LeftRest}${
 
 type Trim<S extends string> = TrimLeft<TrimRight<S>>
 
-type ToUppercase<S extends string> = Uppercase<S>
+type ToUpperCase<S extends string> = Uppercase<S>
 
-type ToLowercase<S extends string> = Lowercase<S>
+type ToLowerCase<S extends string> = Lowercase<S>
 
-type SubStrHelper<
+/**
+ * 在字符串中抽取从 开始 下标开始的指定数目的字符
+ */
+type SubStr<
   S extends string,
-  From extends number,
-  Len extends number,
+  Start extends number,
+  Len extends number
+> = SubStringHelper<S, Start, number.IntAddSingle<Start, Len>>
+
+type SubStringHelper<
+  S extends string,
+  Start extends number,
+  End extends number,
   Offset extends number = 0,
   Cache extends string[] = []
-> = number.IsEqual<Offset, Len> extends true
+> = number.IsEqual<Offset, End> extends true
   ? array.Join<Cache, "">
-  : SubStrHelper<
+  : SubStringHelper<
       S,
-      From,
-      Len,
+      Start,
+      End,
       number.IntAddSingle<Offset, 1>,
-      common.And<
-        CharAt<S, Offset> extends string ? true : false,
-        number.IsEqual<Offset, From>
+      common.And3<
+        common.Or<number.Compare<Offset, Start>, number.IsEqual<Offset, Start>>,
+        common.Or<number.Compare<End, Offset>, number.IsEqual<Offset, End>>,
+        CharAt<S, Offset> extends string ? true : false
       > extends true
         ? array.Push<Cache, CharAt<S, Offset>>
         : Cache
     >
-
-type SubStr<
+/**
+ * 截取start（包括）到end(不包括)之间的字符串
+ */
+type SubString<
   S extends string,
-  From extends number,
-  Len extends number
-> = SubStrHelper<S, From, Len>
+  Start extends number,
+  End extends number
+> = SubStringHelper<S, Start, End>
 
 export type {
   Stringify,
@@ -271,7 +283,8 @@ export type {
   TrimLeft,
   TrimRight,
   Trim,
-  ToUppercase,
-  ToLowercase,
+  ToUpperCase,
+  ToLowerCase,
   SubStr,
+  SubString,
 }
