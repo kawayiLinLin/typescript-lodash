@@ -12,6 +12,28 @@ type GetTupleHelper<
   R extends unknown[] = []
 > = R["length"] extends Length ? R : GetTupleHelper<Length, [...R, unknown]>
 
+type SetHelper<
+  T extends unknown[],
+  Index extends number,
+  Value,
+  Offset extends number = 0,
+  Cache extends unknown[] = []
+> = Offset extends T["length"]
+  ? Cache
+  : SetHelper<
+      T,
+      Index,
+      Value,
+      number.IntAddSingle<Offset, 1>,
+      Push<Cache, Offset extends Index ? Value : T[Offset]>
+    >
+
+type ArraySet<T extends unknown[], Index extends number, Value> = SetHelper<
+  T,
+  Index,
+  Value
+>
+
 /**
  * 从元（数）组类型构造联合类型
  */
@@ -74,7 +96,25 @@ type EveryHelper<
       common.And<common.CheckLeftIsExtendsRight<T[Offset], Check>, CacheBool>
     >
 /** */
-type Every<T extends unknown[], Check> = EveryHelper<T, Check>
+type Every<T extends unknown[], Check> = T["length"] extends 0
+  ? false
+  : EveryHelper<T, Check>
+
+type SomeHelper<
+  T extends unknown[],
+  Check,
+  Offset extends number = 0,
+  CacheBool extends boolean = false
+> = T["length"] extends Offset
+  ? CacheBool
+  : SomeHelper<
+      T,
+      Check,
+      number.IntAddSingle<Offset, 1>,
+      common.Or<common.CheckLeftIsExtendsRight<T[Offset], Check>, CacheBool>
+    >
+/** */
+type Some<T extends unknown[], Check> = SomeHelper<T, Check>
 
 type FillHelper<
   T extends unknown[],
@@ -245,94 +285,58 @@ type Slice<
   End extends number
 > = SliceHelper<T, Start, End>
 
-enum SortType {
-  ASCENDING,
-  DESCENDING,
-}
-
-type MergeSortHelper<
-  TLeft extends number[],
-  TRight extends number[],
-  ST extends SortType,
-  Result extends number[] = [],
-  ShiftedLeft extends unknown[] = Shift<TLeft>,
-  ShiftedRight extends unknown[] = Shift<TRight>
-> =
-  // TLeft
-  common.And<
-    number.IsZero<TLeft["length"]>,
-    number.IsZero<TRight["length"]>
-  > extends true
-    ? Result
-    : common.And<
-        common.Not<number.IsZero<TLeft["length"]>>,
-        common.Not<number.IsZero<TRight["length"]>>
-      > extends true
-    ? common.Or<
-        number.Compare<TRight[0], TLeft[0]>,
-        number.IsEqual<TRight[0], TLeft[0]>
-      > extends true
-      ? MergeSortHelper<
-          ShiftedLeft extends number[] ? ShiftedLeft : number[],
-          TRight,
-          ST,
-          Push<Result, TLeft[0]>
-        >
-      : MergeSortHelper<
-          TLeft,
-          ShiftedRight extends number[] ? ShiftedRight : number[],
-          ST,
-          Push<Result, TLeft[0]>
-        >
-    : common.Not<number.IsZero<TLeft["length"]>> extends true
-    ? MergeSortHelper<
-        ShiftedLeft extends number[] ? ShiftedLeft : number[],
-        TRight,
-        ST,
-        Push<Result, TLeft[0]>
-      >
-    : common.Not<number.IsZero<TRight["length"]>> extends true
-    ? MergeSortHelper<
-        TLeft,
-        ShiftedRight extends number[] ? ShiftedRight : number[],
-        ST,
-        Push<Result, TLeft[0]>
-      >
-    : Result
-
-type SortHepler<
+type SortHepler2<
   T extends number[],
-  ST extends SortType,
-  Len extends number = T["length"],
-  Middle extends number = number.GetHalf<Len>,
-  Left extends number[] = Slice<T, 0, Middle>,
-  Right extends number[] = Slice<T, Middle, T["length"]>
-> = common.Or<
-  number.IsEqual<1, T["length"]>,
-  number.IsZero<T["length"]>
-> extends true
-  ? T
-  : MergeSortHelper<
-      (SortHepler<Left, ST> extends number[] ? SortHepler<Left, ST> : []),
-      SortHepler<Right, ST>,
-      ST
+  Offset extends number = 0,
+  Offset1 extends number = 0,
+  Offset1Added extends number = number.IntAddSingle<Offset1, 1>,
+  Seted1 extends unknown[] = ArraySet<T, Offset1Added, T[Offset1]>,
+  Seted2 extends unknown[] = ArraySet<Seted1, Offset1, T[Offset1Added]>
+> = number.IntAddSingle<
+  number.IntAddSingle<Offset, Offset1>,
+  1
+> extends T["length"]
+  ? SortHepler1<T, number.IntAddSingle<Offset, 1>>
+  : SortHepler2<
+      number.Compare<T[Offset1], T[Offset1Added]> extends true
+        ? Seted2 extends number[]
+          ? Seted2
+          : never
+        : T,
+      number.IntAddSingle<Offset1, 1>
     >
 
-type Sort<
+type SortHepler1<
   T extends number[],
-  ST extends SortType = SortType.ASCENDING
-> = SortHepler<T, ST>
+  Offset extends number = 0
+> = Offset extends T["length"] ? T : SortHepler2<T, Offset>
 
-type a = Sort<[1, 2]>
+type Sort<T extends number[]> = SortHepler1<T>
+
+type TupleKeysHelper<
+  T extends unknown[],
+  Offset extends number = 0
+> = Offset extends T["length"]
+  ? T
+  : TupleKeysHelper<ArraySet<T, Offset, Offset>, number.IntAddSingle<Offset, 1>>
+
+type TupleKeys<T extends unknown[]> = TupleKeysHelper<T>
 
 /**
- * 1,2
- *
+ * @exports
  */
+type IndexOf<
+  T extends unknown[],
+  C,
+  Strict extends boolean = false
+> = FindIndex<T, C, Strict>
+
+type LastIndexOf<T extends unknown[], C> = FindLastIndex<T, C>
 
 export type {
   GetTuple,
   TupleToUnion,
+  ArraySet,
   Pop,
   Shift,
   UnShift,
@@ -340,6 +344,7 @@ export type {
   Concat,
   Join,
   Every,
+  Some,
   Fill,
   Filter,
   Find,
@@ -351,5 +356,8 @@ export type {
   Flat,
   Includes,
   Slice,
-  SortType,
+  Sort,
+  TupleKeys,
+  IndexOf,
+  LastIndexOf,
 }
