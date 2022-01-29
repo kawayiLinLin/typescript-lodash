@@ -209,7 +209,126 @@ type FlatHelper<
 
 type Flat<T extends unknown[]> = FlatHelper<T>
 
-type Includes<T extends unknown[], C> = common.CheckLeftIsExtendsRight<C, TupleToUnion<T>>
+type Includes<T extends unknown[], C> = common.CheckLeftIsExtendsRight<
+  C,
+  TupleToUnion<T>
+>
+
+type SliceHelper<
+  T extends unknown[],
+  Start extends number,
+  End extends number,
+  Offset extends number = 0,
+  Cache extends unknown[] = []
+> = number.IsEqual<Offset, End> extends true
+  ? Cache
+  : SliceHelper<
+      T,
+      Start,
+      End,
+      number.IntAddSingle<Offset, 1>,
+      common.And3<
+        common.Or<number.Compare<Offset, Start>, number.IsEqual<Offset, Start>>,
+        common.Or<number.Compare<End, Offset>, number.IsEqual<Offset, End>>,
+        common.Or<
+          number.Compare<T["length"], Offset>,
+          number.IsEqual<T["length"], End>
+        >
+      > extends true
+        ? array.Push<Cache, T[Offset]>
+        : Cache
+    >
+
+type Slice<
+  T extends unknown[],
+  Start extends number,
+  End extends number
+> = SliceHelper<T, Start, End>
+
+enum SortType {
+  ASCENDING,
+  DESCENDING,
+}
+
+type MergeSortHelper<
+  TLeft extends number[],
+  TRight extends number[],
+  ST extends SortType,
+  Result extends number[] = [],
+  ShiftedLeft extends unknown[] = Shift<TLeft>,
+  ShiftedRight extends unknown[] = Shift<TRight>
+> =
+  // TLeft
+  common.And<
+    number.IsZero<TLeft["length"]>,
+    number.IsZero<TRight["length"]>
+  > extends true
+    ? Result
+    : common.And<
+        common.Not<number.IsZero<TLeft["length"]>>,
+        common.Not<number.IsZero<TRight["length"]>>
+      > extends true
+    ? common.Or<
+        number.Compare<TRight[0], TLeft[0]>,
+        number.IsEqual<TRight[0], TLeft[0]>
+      > extends true
+      ? MergeSortHelper<
+          ShiftedLeft extends number[] ? ShiftedLeft : number[],
+          TRight,
+          ST,
+          Push<Result, TLeft[0]>
+        >
+      : MergeSortHelper<
+          TLeft,
+          ShiftedRight extends number[] ? ShiftedRight : number[],
+          ST,
+          Push<Result, TLeft[0]>
+        >
+    : common.Not<number.IsZero<TLeft["length"]>> extends true
+    ? MergeSortHelper<
+        ShiftedLeft extends number[] ? ShiftedLeft : number[],
+        TRight,
+        ST,
+        Push<Result, TLeft[0]>
+      >
+    : common.Not<number.IsZero<TRight["length"]>> extends true
+    ? MergeSortHelper<
+        TLeft,
+        ShiftedRight extends number[] ? ShiftedRight : number[],
+        ST,
+        Push<Result, TLeft[0]>
+      >
+    : Result
+
+type SortHepler<
+  T extends number[],
+  ST extends SortType,
+  Len extends number = T["length"],
+  Middle extends number = number.GetHalf<Len>,
+  Left extends number[] = Slice<T, 0, Middle>,
+  Right extends number[] = Slice<T, Middle, T["length"]>
+> = common.Or<
+  number.IsEqual<1, T["length"]>,
+  number.IsZero<T["length"]>
+> extends true
+  ? T
+  : MergeSortHelper<
+      (SortHepler<Left, ST> extends number[] ? SortHepler<Left, ST> : []),
+      SortHepler<Right, ST>,
+      ST
+    >
+
+type Sort<
+  T extends number[],
+  ST extends SortType = SortType.ASCENDING
+> = SortHepler<T, ST>
+
+type a = Sort<[1, 2]>
+
+/**
+ * 1,2
+ *
+ */
 
 export type {
   GetTuple,
@@ -230,5 +349,7 @@ export type {
   FindLast,
   FindLastIndex,
   Flat,
-  Includes
+  Includes,
+  Slice,
+  SortType,
 }

@@ -99,8 +99,8 @@ type IntMinusSingleAbsHelper<
 > = IsNotEqual<N1, N2, true> extends true
   ? common.Or<IsZero<A1["length"]>, IsZero<A2["length"]>> extends true
     ? IsZero<A1["length"]> extends true
-      ? A2['length']
-      : A1['length']
+      ? A2["length"]
+      : A1["length"]
     : IntMinusSingleAbsHelper<array.Pop<A1>["length"], array.Pop<A2>["length"]>
   : 0
 
@@ -108,6 +108,18 @@ type IntMinusSingleAbs<
   N1 extends number,
   N2 extends number
 > = IntMinusSingleAbsHelper<N1, N2>
+
+type GetHalfHelper<N extends number, Offset extends number = 0> = IsEqual<
+  IntAddSingle<Offset, Offset>,
+  N
+> extends true
+  ? Offset
+  : IsEqual<IntAddSingle<IntAddSingle<Offset, Offset>, 1>, N> extends true
+  ? IntAddSingle<Offset, 1>
+  : GetHalfHelper<N, IntAddSingle<Offset, 1>>
+
+// 获取当前数的一半
+type GetHalf<N extends number> = GetHalfHelper<N>
 
 export type {
   NumberLike,
@@ -121,4 +133,5 @@ export type {
   IntAddSingle,
   IntMinusSingleAbs,
   Compare,
+  GetHalf,
 }
