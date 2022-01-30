@@ -168,11 +168,6 @@ type AdvancedNumericCharacters =
   | `${Exclude<Numbers, 0>}${number | ""}.${number}`
   | `${number}`
 
-type Add<
-  S1 extends AdvancedNumericCharacters,
-  S2 extends AdvancedNumericCharacters
-> = S1
-
 type AddMap = [
   [
     { result: "0"; add: "0" }, // 00
@@ -296,8 +291,6 @@ type AddMap = [
   ]
 ]
 
-type b = AddMap["9"][9]
-
 type SplitByPoint<S extends AdvancedNumericCharacters> = string.Includes<
   S,
   "."
@@ -307,72 +300,127 @@ type SplitByPoint<S extends AdvancedNumericCharacters> = string.Includes<
 
 type AddHelperSplitToArr<
   S1 extends AdvancedNumericCharacters,
-  S2 extends AdvancedNumericCharacters
-> = [SplitByPoint<S1>, SplitByPoint<S2>]
+  S2 extends AdvancedNumericCharacters,
+  Result = [SplitByPoint<S1>, SplitByPoint<S2>]
+> = Result extends [[`${number}`, `${number}`], [`${number}`, `${number}`]]
+  ? Result
+  : never
 
 type AddFillZeroHelper<
-  Data extends [[`${number}`, `${number}`], [`${number}`, `${number}`]]
-> = [
-  [
-    string.PadStart<Data[0][0], string.GetStringLength<Data[1][0]>, "0">,
-    string.PadEnd<Data[0][1], string.GetStringLength<Data[1][1]>, "0">
-  ],
-  [
-    string.PadStart<Data[1][0], string.GetStringLength<Data[0][0]>, "0">,
-    string.PadEnd<Data[1][1], string.GetStringLength<Data[0][1]>, "0">
+  Data extends [[`${number}`, `${number}`], [`${number}`, `${number}`]],
+  Result = [
+    [
+      string.PadStart<Data[0][0], string.GetStringLength<Data[1][0]>, "0">,
+      string.PadEnd<Data[0][1], string.GetStringLength<Data[1][1]>, "0">
+    ],
+    [
+      string.PadStart<Data[1][0], string.GetStringLength<Data[0][0]>, "0">,
+      string.PadEnd<Data[1][1], string.GetStringLength<Data[0][1]>, "0">
+    ]
   ]
-]
+> = Result extends [[`${number}`, `${number}`], [`${number}`, `${number}`]]
+  ? Result
+  : never
 
 type AddReverseData<
-  Data extends [[`${number}`, `${number}`], [`${number}`, `${number}`]]
-> = [
-  [
-    array.Reverse<string.Split<Data[0][0]>>,
-    array.Reverse<string.Split<Data[0][1]>>
-  ],
-  [
-    array.Reverse<string.Split<Data[1][0]>>,
-    array.Reverse<string.Split<Data[1][1]>>
+  Data extends [[`${number}`, `${number}`], [`${number}`, `${number}`]],
+  Result = [
+    [
+      array.Reverse<string.Split<Data[0][0]>>,
+      array.Reverse<string.Split<Data[0][1]>>
+    ],
+    [
+      array.Reverse<string.Split<Data[1][0]>>,
+      array.Reverse<string.Split<Data[1][1]>>
+    ]
   ]
+> = Result extends [
+  [`${Numbers}`[], `${Numbers}`[]],
+  [`${Numbers}`[], `${Numbers}`[]]
 ]
+  ? Result
+  : never
 
 type StepAdderHelper<
+  DataLeft extends `${Numbers}`[],
+  DataRight extends `${Numbers}`[],
+  Curry extends `${Numbers}` = `${0}`,
+  Offset extends number = 0,
+  ResultCache extends `${number}`[] = [],
+  NextOffset extends number = number.IntAddSingle<Offset, 1>,
+  Current extends AddMap[Numbers][Numbers] = AddMap[DataLeft[Offset]][DataRight[Offset]],
+  CurrentWidthPreCurry extends `${Numbers}` = AddMap[Current["result"]][Curry]["result"]
+> = DataLeft["length"] extends DataRight["length"]
+  ? `${Offset}` extends `${DataLeft["length"]}`
+    ? ResultCache
+    : StepAdderHelper<
+        DataLeft,
+        DataRight,
+        Current["add"],
+        NextOffset,
+        common.And<
+          number.IsEqual<Current["add"], "1">,
+          number.IsEqual<`${NextOffset}`, `${DataLeft["length"]}`>
+        > extends true
+          ? array.Push<["10", ...ResultCache], CurrentWidthPreCurry>
+          : array.Push<ResultCache, CurrentWidthPreCurry>
+      >
+  : never
+
+type NumbersWidthCurry = Numbers | 10
+
+type MergeResultHelper<
   Data extends [
     [`${Numbers}`[], `${Numbers}`[]],
     [`${Numbers}`[], `${Numbers}`[]]
   ],
-  IsInt extends boolean = false,
-  Curry extends `${Numbers}` = `${0}`,
-  Offset extends number = 0,
-  ResultCache extends `${number}`[] = [],
-  Current extends AddMap[Numbers][Numbers] = IsInt extends true
-    ? AddMap[Data[0][1][Offset]][Data[1][1][Offset]]
-    : AddMap[Data[0][1][Offset]][Data[1][1][Offset]],
-  CurrentWidthPreCurry extends `${Numbers}` = AddMap[Current["result"]][Curry]["result"]
-> = common.And<
-  IsEqual<Data[0][0]["length"], Data[1][0]["length"]>,
-  IsEqual<Data[0][1]["length"], Data[1][1]["length"]>
-> extends true
-  ? common.And<IsEqual<Offset, Data[0][0]["length"]>, IsInt> extends true
-    ? ResultCache
-    : StepAdderHelper<
-        Data,
-        Offset extends Data[IsInt extends false ? 1 : 0][0]["length"]
-          ? true
-          : false,
-        Current["add"],
-        IsEqual<Offset, Data[1][0]["length"]> extends true
-          ? 0
-          : number.IntAddSingle<Offset, 1>,
-        array.Push<ResultCache, CurrentWidthPreCurry>
-      >
-  : never
+  LeftInt extends `${Numbers}`[] = Data[0][0],
+  LeftFloat extends `${Numbers}`[] = Data[0][1],
+  RightInt extends `${Numbers}`[] = Data[1][0],
+  RightFloat extends `${Numbers}`[] = Data[1][1],
+  FloatAdded extends `${NumbersWidthCurry}`[] = StepAdderHelper<
+    LeftFloat,
+    RightFloat
+  >,
+  FloatHasCurry extends boolean = FloatAdded[0] extends "10" ? true : false,
+  DeleteCurryFloatResult extends unknown[] = FloatHasCurry extends true
+    ? array.Shift<FloatAdded>
+    : FloatAdded,
+  IntAdded extends `${NumbersWidthCurry}`[] = StepAdderHelper<
+    LeftInt,
+    RightInt,
+    FloatHasCurry extends true ? `1` : "0"
+  >,
+  IntHasCurry extends boolean = IntAdded[0] extends "10" ? true : false,
+  DeleteCurryIntResult extends unknown[] = IntHasCurry extends true
+    ? array.Shift<IntAdded>
+    : IntAdded,
+  ResultReversed = array.Reverse<
+    LeftFloat["length"] extends 0
+      ? DeleteCurryIntResult
+      : array.Concat<
+          [...DeleteCurryFloatResult, "."],
+          [...DeleteCurryIntResult]
+        >
+  >,
+  FloatResult = array.Join<
+    ResultReversed extends string[]
+      ? IntHasCurry extends true
+        ? ["1", ...ResultReversed]
+        : ResultReversed
+      : never,
+    ""
+  >
+> = FloatResult
 
-type a = StepAdderHelper<
-  [[["0"]], [["0"]]],
-  [[["0"]], [["0"]]]
-  //   AddReverseData<AddFillZeroHelper<AddHelperSplitToArr<"1", "1">>>
+type Add<
+  S1 extends AdvancedNumericCharacters,
+  S2 extends AdvancedNumericCharacters
+> = MergeResultHelper<
+  AddReverseData<AddFillZeroHelper<AddHelperSplitToArr<S1, S2>>>
 >
+
+type add = Add<"9007199254740991", "9007199254740991">
 
 export type {
   NumberLike,
