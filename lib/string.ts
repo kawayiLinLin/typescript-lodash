@@ -180,6 +180,7 @@ type Repeat<S extends string, Times extends number = 1> = RepeatHelper<S, Times>
 type PadHelper<
   S extends string,
   N extends number = 0,
+  FillS extends string = " ",
   IsStart extends boolean = true,
   Len extends number = GetStringLength<S>,
   Offset extends number = Len
@@ -187,19 +188,28 @@ type PadHelper<
   ? number.IsEqual<N, Offset> extends true
     ? S
     : PadHelper<
-        `${IsStart extends true ? " " : ""}${S}${IsStart extends false
-          ? " "
+        `${IsStart extends true ? FillS : ""}${S}${IsStart extends false
+          ? FillS
           : ""}`,
         N,
+        FillS,
         IsStart,
         Len,
         number.IntAddSingle<Offset, 1>
       >
   : S
 
-type PadStart<S extends string, N extends number = 0> = PadHelper<S, N>
+type PadStart<
+  S extends string,
+  N extends number = 0,
+  FillS extends string = " "
+> = PadHelper<S, N, FillS>
 
-type PadEnd<S extends string, N extends number = 0> = PadHelper<S, N, false>
+type PadEnd<
+  S extends string,
+  N extends number = 0,
+  FillS extends string = " "
+> = PadHelper<S, N, FillS, false>
 
 /**
  * @see https://juejin.cn/post/7045536402112512007#heading-5

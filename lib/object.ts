@@ -68,7 +68,7 @@ type ChainedAccessUnionHelper<
       : A[Key] extends object
       ?
           | `${Extract<Key, string>}.${Extract<keyof A[Key], string>}`
-          | (ChainedAccessUnion<A[Key]> extends infer U
+          | (ChainedAccessUnionHelper<A[Key]> extends infer U
               ? `${Extract<Key, string>}.${Extract<U, string>}`
               : never)
       : never
@@ -91,5 +91,5 @@ export type {
   ChangeRecordType,
   DeepPartial,
   ReadonlyPartial,
-  Mutable
+  Mutable,
 }

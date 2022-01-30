@@ -1,3 +1,5 @@
+import { array } from ".."
+
 type Not<C extends boolean> = C extends true ? false : true
 
 type And<C1 extends boolean, C2 extends boolean> = C1 extends true
@@ -37,6 +39,8 @@ type IsEqual<A, B> = (<T>() => T extends A ? 1 : 2) extends <
   ? true
   : false
 
+type IsAny<T> = 0 extends (1 & T) ? true : false
+
 type SafeCheck<T> = T extends null | undefined | never ? false : true
 
 type Diff<T, C> = Exclude<T, C> | Exclude<C, T>
@@ -52,6 +56,7 @@ export type {
   And,
   And3,
   And4,
+  IsAny,
   Or,
   CheckLeftIsExtendsRight,
   IsEqual,
