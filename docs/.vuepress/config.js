@@ -5,7 +5,8 @@ module.exports = {
   themeConfig: {
     lastUpdated: '最后更新时间',
     sidebar: require('./sidebar').sidebar,
-    nav: require('./sidebar').nav
+    nav: require('./sidebar').nav,
+    displayAllHeaders: true
   },
 }
 
