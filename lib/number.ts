@@ -166,7 +166,6 @@ type Numbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 type AdvancedNumericCharacters =
   | `${0}.${number}`
   | `${Exclude<Numbers, 0>}${number | ""}.${number}`
-  | `${number}`
 
 type AddMap = [
   [
@@ -279,7 +278,7 @@ type AddMap = [
   ],
   [
     { result: "9"; add: "0" }, // 90
-    { result: "0"; add: "0" }, // 91
+    { result: "0"; add: "1" }, // 91
     { result: "1"; add: "1" }, // 92
     { result: "2"; add: "1" }, // 93
     { result: "3"; add: "1" }, // 94
