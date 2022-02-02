@@ -6,6 +6,8 @@ export * as number from './lib/number'
 
 export * as object from './lib/object'
 
-export * as string from './lib/string' 
+export * as string from './lib/string'
+
+export * as function from './lib/function'
 
 // 嵌套实例过深的问题 https://github.com/microsoft/TypeScript/issues/37613
