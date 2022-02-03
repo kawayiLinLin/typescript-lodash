@@ -2,7 +2,7 @@
 home: true
 heroImage: /logo.svg
 actionText: 快速上手 →
-actionLink: /guide/
+actionLink: /guide/介绍.html
 features:
 - title: 类型体操
   details: 像做体操运动一样花里胡哨（褒义），为中国冬奥会加油
