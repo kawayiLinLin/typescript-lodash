@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs",
+    "ci": "git push github gh-pages",
     "pub": "npm publish --registry=https://registry.npmjs.org",
     "login": "npm login --registry=https://registry.npmjs.org",
     "postpublish": "git push origin master & git push github master & git push github --tag & git push origin --tag"
