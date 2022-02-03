@@ -1,5 +1,6 @@
 {
   "name": "typescript-lodash",
+  "homepage": "https://kawayiLinLin.github.io/typescript-lodash",
   "version": "0.0.2",
   "description": "A TypeScript Utility Types lib",
   "files": [
@@ -10,8 +11,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "dev": "vuepress dev docs",
-    "build": "vuepress build docs",
+    "dev": "vuepress dev documents",
+    "build": "vuepress build documents",
     "pub": "npm publish --registry=https://registry.npmjs.org",
     "login": "npm login --registry=https://registry.npmjs.org",
     "postpublish": "git push origin master & git push github master & git push github --tag & git push origin --tag"

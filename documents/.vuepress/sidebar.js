@@ -48,7 +48,7 @@ function generateSideBar(pathline, sideBarConfig, url, item) {
     }
   });
 }
-generateSideBar(path.resolve(__dirname, '../../docs'), sideBarConfigArr, '')
+generateSideBar(path.resolve(__dirname, '../../documents'), sideBarConfigArr, '')
 
 // 单独处理最顶层分类
 sideBarConfigArr = sideBarConfigArr.reduce((config, item) => (config[item.path] = item.children, config), {})
