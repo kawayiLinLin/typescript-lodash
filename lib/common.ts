@@ -1,5 +1,3 @@
-import { array } from ".."
-
 type Not<C extends boolean> = C extends true ? false : true
 
 type And<C1 extends boolean, C2 extends boolean> = C1 extends true
@@ -49,8 +47,6 @@ type SumAggregate<T, U> = T | U
 
 type Nullable<T> = T | null | undefined
 
-type CanStringified = string | number | bigint | boolean | null | undefined
-
 export type {
   Not,
   And,
@@ -64,5 +60,4 @@ export type {
   Diff,
   SumAggregate,
   Nullable,
-  CanStringified,
 }

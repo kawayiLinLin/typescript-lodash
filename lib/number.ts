@@ -1,7 +1,4 @@
-import * as common from "./common"
-import * as string from "./string"
-import * as array from "./array"
-import { number } from ".."
+import { number, array, string, common } from ".."
 
 type NumberLike = number | `${number}`
 /**
@@ -168,7 +165,7 @@ type AdvancedNumericCharacters =
   | `${Exclude<Numbers, 0>}${number | ""}.${number}`
   | `${Exclude<Numbers, 0>}${Numbers | ""}.${number}`
   | `${Exclude<Numbers, 0>}${number}`
-  | `${0}`
+  | `${Numbers}`
 
 type AddMap = [
   [
@@ -438,4 +435,5 @@ export type {
   Compare,
   GetHalf,
   ToNumber,
+  Add
 }

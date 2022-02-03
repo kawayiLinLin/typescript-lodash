@@ -309,7 +309,7 @@ type Result3 = number.Compare<1, 0> // true
 两个数字类型相减，得到差的绝对值
 
 ::: warning 注意
-该数字类型大小比较工具类型有较为明显的边界限制
+该数字类型相减工具类型有较为明显的边界限制
 :::
 
 **泛型参数**
@@ -342,8 +342,82 @@ type Result3 = number.IntMinusSingleAbs<5, 1> // 4
 
 如果该数字类型 `N` 为奇数，则会得到 `(N + 1) / 2` 的结果
 
+::: warning 注意
+该数字类型获取一半工具类型有较为明显的边界限制
+:::
+
 **泛型参数**
 
 + N
     - 约束 `number`
     - 必须 `是`
+    - 注：为大于等于0的整数，且不超过1000
+
+```ts
+import { number } from 'typescript-lodash'
+
+type Result1 = number.GetHalf<0> // 0
+
+type Result2 = number.GetHalf<1> // 1
+
+type Result3 = number.GetHalf<2> // 1
+
+type Result4 = number.GetHalf<4> // 2
+```
+
+## ToNumber 转为数字类型
+
+将字符串类型（整数）转为数字类型
+
+**泛型参数**
+
++ N
+    - 约束 `string`
+    - 必须 `是`
+    - 注：需要为大于等于0的整数，最大可转换9999
+
+```ts
+import { number } from 'typescript-lodash'
+
+type Result1 = number.ToNumber<"123"> // 123
+```
+
+## Add 大数相加
+
+支持大数类型（字符串）相加，不会出现精度问题，结果类型为字符串类型
+
+**约束说明**
+
+`AdvancedNumericCharacters` 即小数点左边不能以多个 0 为开始，且为字符类型
+
+```ts
+type Numbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+type AdvancedNumericCharacters =
+  | `${0}.${number}`
+  | `${Exclude<Numbers, 0>}${number | ""}.${number}`
+  | `${Exclude<Numbers, 0>}${Numbers | ""}.${number}`
+  | `${Exclude<Numbers, 0>}${number}`
+  | `${Numbers}`
+```
+
+**泛型参数**
+
++ S1
+    - 约束 `AdvancedNumericCharacters`
+    - 必须 `是`
+
++ S2
+    - 约束 `AdvancedNumericCharacters`
+    - 必须 `是`
+
+```ts
+import { number } from 'typescript-lodash'
+
+type Result1 = number.Add<"1", "1"> // 2
+
+type Result1 = number.Add<"9007199254740991", "9007199254740991"> // "18014398509481982.0"
+
+type Result2 = number.Add<"9007199254740991.12345", "9007199254740991.234567"> // "18014398509481982.357017"
+```
+

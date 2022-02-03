@@ -1,6 +1,4 @@
-import { ModeAwareCache } from "typescript"
-import { array, number } from ".."
-import * as common from "./common"
+import { common, array, number, string } from ".."
 
 /**
  * 构造长度一定（Length）的元组
@@ -67,13 +65,13 @@ type Push<T extends unknown[], Item> = [...T, Item]
 type Concat<T extends unknown[], R extends unknown[]> = [...T, ...R]
 /** */
 type Join<
-  T extends common.CanStringified[],
-  SplitStr extends common.CanStringified = ""
+  T extends string.CanStringified[],
+  SplitStr extends string.CanStringified = ""
 > = T["length"] extends 0
   ? ""
   : T extends [infer Left, ...infer RightRest]
-  ? Left extends common.CanStringified
-    ? RightRest extends common.CanStringified[]
+  ? Left extends string.CanStringified
+    ? RightRest extends string.CanStringified[]
       ? `${Left}${T["length"] extends 1 ? "" : SplitStr}${Join<
           RightRest,
           SplitStr

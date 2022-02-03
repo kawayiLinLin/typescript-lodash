@@ -1,4 +1,4 @@
-import * as common from "./common"
+import { common } from ".."
 
 type KeysToTuple<T> = KeysToUnion<T>[]
 

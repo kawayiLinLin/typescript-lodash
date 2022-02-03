@@ -1,10 +1,12 @@
-import { number, string, array, common } from ".."
+import { number, array, common } from ".."
+
+type CanStringified = string | number | bigint | boolean | null | undefined
 
 /**
  * @exports
  * 将支持的类型转化为字符串
  */
-type Stringify<T extends common.CanStringified> = `${T}`
+type Stringify<T extends CanStringified> = `${T}`
 
 /**
  * @@exports
@@ -275,6 +277,7 @@ type SubString<
 > = SubStringHelper<S, Start, End>
 
 export type {
+  CanStringified,
   Stringify,
   GetChars,
   Split,
