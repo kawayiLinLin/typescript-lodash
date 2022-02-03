@@ -1,14 +1,32 @@
 {
   "name": "typescript-lodash",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.0",
+  "description": "A TypeScript Utility Types lib",
+  "files": [
+    "lib",
+    "index.ts",
+    "tsconfig.json",
+    "test"
+  ],
   "scripts": {
     "dev": "vuepress dev docs",
-    "build": "vuepress build docs"
+    "build": "vuepress build docs",
+    "pub": "npm publish --registry=https://registry.npmjs.org",
+    "login": "npm login --registry=https://registry.npmjs.org"
   },
-  "keywords": [],
-  "author": "",
+  "main": "./index",
+  "module": "./index",
+  "keywords": [
+    "typescript",
+    "Utility",
+    "Types",
+    "tool",
+    "util",
+    "ts",
+    "TS",
+    "TypeScript"
+  ],
+  "author": "kawayilinlin",
   "license": "MIT",
   "dependencies": {
     "typescript": "^4.5.5"

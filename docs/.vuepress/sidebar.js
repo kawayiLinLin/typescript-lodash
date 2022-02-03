@@ -4,6 +4,7 @@ const fs = require('fs')
 const nav = [
   { text: '首页', link: '/' },
   { text: '指南', link: '/guide/' },
+  { text: '文档', link: '/document/' },
   { text: 'github', link: 'https://github.com/kawayiLinLin/typescript-lodash', target: '_blank' }
 ]
 
