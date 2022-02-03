@@ -1,15 +1,9 @@
 {
   "name": "typescript-lodash",
-  "homepage": "https://kawayiLinLin.github.io/typescript-lodash",
   "version": "0.0.3",
   "description": "A TypeScript Utility Types lib",
-  "files": [
-    "lib",
-    "test",
-    "index.ts",
-    "tsconfig.json",
-    "LICENSE"
-  ],
+  "main": "./index",
+  "module": "./index",
   "scripts": {
     "dev": "vuepress dev documents",
     "build": "vuepress build documents",
@@ -17,8 +11,18 @@
     "login": "npm login --registry=https://registry.npmjs.org",
     "postpublish": "git push origin master & git push github master & git push github --tag & git push origin --tag"
   },
-  "main": "./index",
-  "module": "./index",
+  "files": [
+    "lib",
+    "test",
+    "index.ts",
+    "tsconfig.json",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kawayiLinLin/typescript-lodash.git"
+  },
+  "homepage": "https://kawayiLinLin.github.io/typescript-lodash",
   "keywords": [
     "typescript",
     "Utility",
