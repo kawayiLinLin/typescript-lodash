@@ -1,7 +1,7 @@
 {
   "name": "typescript-lodash",
   "homepage": "https://kawayiLinLin.github.io/typescript-lodash",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A TypeScript Utility Types lib",
   "files": [
     "lib",
