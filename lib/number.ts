@@ -15,8 +15,8 @@ type IsZero<N extends NumberLike> = common.CheckLeftIsExtendsRight<N, 0 | "0">
 type IsOverZero<N extends NumberLike> = IsZero<N> extends true
   ? false
   : common.CheckLeftIsExtendsRight<
-      string.Stringify<N> extends `${"-"}${infer Rest}` ? Rest : never,
-      never
+      string.Stringify<N> extends `${"-"}${infer Rest}` ? Rest : false,
+      false
     >
 
 /**
@@ -33,7 +33,7 @@ type IsFloat<
 > = string.Stringify<N> extends `${infer Left}${"."}${infer Right}`
   ? OnlyCheckPoint extends true
     ? true
-    : common.Not<common.CheckLeftIsExtendsRight<string.GetChars<Right>, "0">>
+    : common.Not<array.Every<string.Split<Right>, "0">>
   : false
 
 /**
@@ -166,6 +166,9 @@ type Numbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 type AdvancedNumericCharacters =
   | `${0}.${number}`
   | `${Exclude<Numbers, 0>}${number | ""}.${number}`
+  | `${Exclude<Numbers, 0>}${Numbers | ""}.${number}`
+  | `${Exclude<Numbers, 0>}${number}`
+  | `${0}`
 
 type AddMap = [
   [
@@ -419,7 +422,7 @@ type Add<
   AddReverseData<AddFillZeroHelper<AddHelperSplitToArr<S1, S2>>>
 >
 
-type add = Add<"9007199254740991", "9007199254740991">
+type add = Add<"0.9007199254740991", "9007199254740991">
 
 export type {
   NumberLike,
