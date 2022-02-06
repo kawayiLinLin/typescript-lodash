@@ -24,4 +24,4 @@ type TypeResult = ["今", "天", "很", "高", "兴"]
 
 查看文档
 
-[中文文档](https://kawayilinlin.github.io/typescript-lodash/guide/%E4%BB%8B%E7%BB%8D.html)
+[中文文档](https://kawayilinlin.github.io/typescript-lodash/)
