@@ -1,8 +1,8 @@
-import * as number from '../lib/number'
+import * as number from "../lib/number"
 
 type ResultIsZero = number.IsZero<-0>
 
-type ResultIsLessZero = number.IsLessZero<'+1'>
+type ResultIsLessZero = number.IsLessZero<"+1">
 
 type ResultIsOverZero = number.IsOverZero<"+1">
 
@@ -21,3 +21,17 @@ type ResultGetHalf = number.GetHalf<0>
 type ResultToNumber = number.ToNumber<"9999">
 
 type ResultAdd = number.Add<"9007199254740991.12345", "9007199254740991.234567">
+
+export type {
+  ResultIsZero,
+  ResultIsLessZero,
+  ResultIsOverZero,
+  ResultIsInt,
+  ResultIsFloat,
+  ResultIsEqual,
+  ResultIntAdd,
+  ResultCompare,
+  ResultGetHalf,
+  ResultToNumber,
+  ResultAdd,
+}

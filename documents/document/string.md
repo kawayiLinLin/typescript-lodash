@@ -1,5 +1,7 @@
 # string 工具类型
 
+[在 CodeSandBox 中尝试](https://codesandbox.io/s/typescript-lodash-example-1l5hn?file=/src/string.ts)
+
 ## CanStringified 可转字符的类型
 
 可以转字符类型的类型，如 `0`、`"haha"`、`true`、`null`、`undefined`
@@ -52,7 +54,7 @@ import { string } from "typescript-lodash"
 
 type Result1 = string.GetChars<'abc'> // 'a' | 'b' | 'c'
 
-type Result2 = string.GetChars<''> // never
+type Result2 = string.GetChars<""> // never
 ```
 
 ## Split 分割字符串
@@ -68,7 +70,7 @@ type Result2 = string.GetChars<''> // never
 + SplitStr
     - 约束 `string`
     - 必须 `否`
-    - 默认 `''`
+    - 默认 `""`
     - 注：按照 SplitStr 分割字符串类型
 
 ```ts
@@ -78,7 +80,7 @@ type Result1 = string.Split<'abc'> // ['a', 'b', 'c']
 
 type Result2 = string.Split<'1,2,3', ','> // ["1", "2", "3"]
 
-type Result3 = string.Split<'', ','> // []
+type Result3 = string.Split<"", ','> // []
 ```
 
 ## GetStringLength 获取字符串长度
@@ -347,19 +349,146 @@ type Result2 = string.Repeat<"123", 0> // ""
 
 ## PadStart 在前面填充
 
+当字符串类型长度低于给定值时，在字符串前面以给定字符串类型进行填充，直到满足给定长度
+
+**泛型参数**
+
++ S
+    - 约束 `string`
+    - 必须 `是`
+
++ N
+    - 约束 `number`
+    - 必须 `否`
+    - 默认 `0`
+    - 注：给定字符串需要达到的长度
+
++ FillS
+    - 约束 `string`
+    - 必须 `否`
+    - 默认 `" "`
+    - 注：填充字符
+
+```ts
+import { string } from "typescript-lodash"
+
+type Result1 = string.PadStart<"123", 4> // " 123"
+
+type Result2 = string.PadStart<"123", 5, 'x'> // "xx123"
+```
+
 ## PadEnd 在后面填充
+
+当字符串类型长度低于给定值时，在字符串后面以给定字符串类型进行填充，直到满足给定长度
+
+**泛型参数**
+
++ S
+    - 约束 `string`
+    - 必须 `是`
+
++ N
+    - 约束 `number`
+    - 必须 `否`
+    - 默认 `0`
+    - 注：给定字符串需要达到的长度
+
++ FillS
+    - 约束 `string`
+    - 必须 `否`
+    - 默认 `" "`
+    - 注：填充字符
+
+```ts
+import { string } from "typescript-lodash"
+
+type Result1 = string.PadEnd<"123", 4> // "123 "
+
+type Result2 = string.PadEnd<"123", 5, 'x'> // "123xx"
+```
 
 ## TrimLeft 去掉左边空格
 
+去掉字符串类型左侧的所有空格、制表符、换行符
+
+**泛型参数**
+
++ S
+    - 约束 `string`
+    - 必须 `是`
+
+```ts
+import { string } from "typescript-lodash"
+
+type Result1 = string.TrimLeft<"     123 "> // "123 "
+```
+
 ## TrimRight 去掉右边空格
+
+去掉字符串类型右侧的所有空格、制表符、换行符
+
+**泛型参数**
+
++ S
+    - 约束 `string`
+    - 必须 `是`
+
+```ts
+import { string } from "typescript-lodash"
+
+type Result1 = string.TrimLeft<"     123 "> // "     123"
+```
 
 ## Trim 去掉两边空格
 
+去掉字符串类型两侧的所有空格、制表符、换行符
+
+**泛型参数**
+
++ S
+    - 约束 `string`
+    - 必须 `是`
+
+```ts
+import { string } from "typescript-lodash"
+
+type Result1 = string.TrimLeft<"     123 "> // "123"
+```
+
 ## ToUpperCase 转大写
+
+将字符串类型中的英文字母全部转为大写
+
+**泛型参数**
+
++ S
+    - 约束 `string`
+    - 必须 `是`
+
+```ts
+import { string } from "typescript-lodash"
+
+type Result1 = string.ToUpperCase<"abc"> // "ABC"
+```
 
 ## ToLowerCase 转小写
 
+将字符串类型中的英文字母全部转为小写
+
+**泛型参数**
+
++ S
+    - 约束 `string`
+    - 必须 `是`
+
+```ts
+import { string } from "typescript-lodash"
+
+type Result1 = string.ToUpperCase<"ABC"> // "abc"
+```
 
 ## SubString 截取字符串
+
+
 
 ## SubStr 截取一定长度的字符串

@@ -1,5 +1,7 @@
 # number 工具类型
 
+[在 CodeSandBox 中尝试](https://codesandbox.io/s/typescript-lodash-example-1l5hn?file=/src/number.ts)
+
 ## NumberLike 形如数字类型
 
 形如数字的类型，如：`0`、`"0"`、`0.1`、`-1`、`"-0.1"`、`"+1"` 等
