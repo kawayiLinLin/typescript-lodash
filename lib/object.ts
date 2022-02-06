@@ -15,11 +15,11 @@ type ExcludeValues<T, V> = {
 }
 
 type GetterSetterPrefix<T> = {
-  [Key in keyof T as Key extends string ? `get${Uppercase<Key>}` : never]: {
+  [Key in keyof T as Key extends string ? `get${Capitalize<Key>}` : never]: {
     (): T[Key]
   }
 } & {
-  [Key in keyof T as Key extends string ? `set${Uppercase<Key>}` : never]: {
+  [Key in keyof T as Key extends string ? `set${Capitalize<Key>}` : never]: {
     (val: T[Key]): void
   }
 } & T
