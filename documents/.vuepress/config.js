@@ -5,6 +5,9 @@ module.exports = {
   description: "TypeScript 的工具类型集合",
   base: `/${package.name}/`,
   dest: './docs',
+  head: [
+    ['link', { rel: 'icon', href: `/logo.svg` }],
+  ],
   evergreen: true,
   themeConfig: {
     lastUpdated: '最后更新时间',
