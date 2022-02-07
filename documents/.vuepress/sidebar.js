@@ -7,7 +7,7 @@ const nav = [
   { text: "文档", link: "/document/1.number.html" },
   {
     text: "原理",
-    link: "https://yzl.xyz/lin/2022/01/%E6%8E%A5%E8%BF%91%E5%A4%A9%E8%8A%B1%E6%9D%BF%E7%9A%84TS%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D-%E7%9C%8B%E6%87%82%E4%BD%A0%E5%B0%B1%E8%83%BD%E7%8E%A9%E8%BD%ACTS%E4%BA%86/c7c8c77c59d1.html",
+    link: "https://juejin.cn/post/7061556434692997156",
     target: "_blank",
   },
   {
