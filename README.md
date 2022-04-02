@@ -4,15 +4,15 @@
 安装
 
 ```bash
-yarn add -S typescript-lodash # 或者：npm install -s typescript-lodash
+yarn add --save typescript-lodash # 或者：npm install --save typescript-lodash
 ```
 
 使用
 
 ```ts
 import { string } from "typescript-lodash"
-// 或 import * as t from "typescript-lodash" 然后用 t.string.Split<"">
-// 或 import { Split } from "typescript-lodash" 然后用 Split<"">
+// or use `import * as t from "typescript-lodash"` and then `t.string.Split<"">`
+// or use `import { Split } from "typescript-lodash"` and then `Split<"">`
 
 type IString = "今天很高兴"
 
