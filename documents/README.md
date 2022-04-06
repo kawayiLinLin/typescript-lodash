@@ -18,7 +18,7 @@ footer: MIT Licensed | Copyright © 2022-present kawayiLinLin
 安装
 
 ```bash
-yarn add -S typescript-lodash # 或者：npm install -S typescript-lodash
+yarn add typescript-lodash # 或者：npm install -S typescript-lodash
 ```
 
 使用

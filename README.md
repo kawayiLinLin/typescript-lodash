@@ -4,7 +4,7 @@
 安装
 
 ```bash
-yarn add --save typescript-lodash # 或者：npm install --save typescript-lodash
+yarn add typescript-lodash # 或者：npm install --save typescript-lodash
 ```
 
 使用
