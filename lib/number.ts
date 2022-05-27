@@ -419,8 +419,6 @@ type Add<
   AddReverseData<AddFillZeroHelper<AddHelperSplitToArr<S1, S2>>>
 >
 
-type add = Add<"0.9007199254740991", "9007199254740991">
-
 export type {
   NumberLike,
   IsZero,
