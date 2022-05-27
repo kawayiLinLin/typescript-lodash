@@ -19,7 +19,7 @@ type IsOverZero<N extends NumberLike> = IsZero<N> extends true
 /**
  * number类型是否小于0
  */
-type IsLessZero<N extends NumberLike> = common.Not<IsOverZero<N>>
+type IsLessZero<N extends NumberLike> = IsZero<N> extends true ? false : common.Not<IsOverZero<N>>
 
 /**
  * number类型是否是小数
