@@ -114,13 +114,13 @@ type LastIndexOfHelper<
   S1 extends string,
   S2 extends string,
   Index extends number = -1 /** 当前从左往右匹配最大的值，匹配不到以后，上一次匹配的索引就是从右往左第一个的索引 */,
-  AddOffset extends number = 0 /** 每次从左往右匹配并替换成空串后，下次循序需要累加的值 */
+  AddOffset extends number = 0 /** 累加的偏移量; 每次从左往右匹配成功后，将匹配到的字符串替换为S2.substring(1)，且偏移量加1 */
 > = S1 extends `${infer Left}${S2}${infer Right}`
   ? LastIndexOfHelper<
-      Replace<S1, S2, "">,
+      Replace<S1, S2, SubString<S2, 1, GetStringLength<S2>>>,
       S2,
       number.IntAddSingle<GetStringLength<Left>, AddOffset>,
-      number.IntAddSingle<AddOffset, GetStringLength<S2>>
+      number.IntAddSingle<AddOffset, 1>
     >
   : Index
 
