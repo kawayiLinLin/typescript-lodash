@@ -85,13 +85,16 @@ type EveryHelper<
   Check,
   Offset extends number = 0,
   CacheBool extends boolean = true
-> = T["length"] extends Offset
+> = common.Or<
+    number.IsEqual<T['length'], Offset>,
+    common.Not<CacheBool>
+  > extends true
   ? CacheBool
   : EveryHelper<
       T,
       Check,
       number.IntAddSingle<Offset, 1>,
-      common.And<common.CheckLeftIsExtendsRight<T[Offset], Check>, CacheBool>
+      common.CheckLeftIsExtendsRight<T[Offset], Check>
     >
 /** */
 type Every<T extends unknown[], Check> = T["length"] extends 0
@@ -103,13 +106,16 @@ type SomeHelper<
   Check,
   Offset extends number = 0,
   CacheBool extends boolean = false
-> = T["length"] extends Offset
+> = common.Or<
+    number.IsEqual<T['length'], Offset>,
+    CacheBool
+  > extends true
   ? CacheBool
   : SomeHelper<
       T,
       Check,
       number.IntAddSingle<Offset, 1>,
-      common.Or<common.CheckLeftIsExtendsRight<T[Offset], Check>, CacheBool>
+      common.CheckLeftIsExtendsRight<T[Offset], Check>
     >
 /** */
 type Some<T extends unknown[], Check> = SomeHelper<T, Check>
@@ -161,7 +167,7 @@ type FindHelper<
   T extends unknown[],
   C,
   Offset extends number = 0
-> = Offset extends number.IntAddSingle<T["length"], 1>
+> = Offset extends T["length"]
   ? null
   : common.CheckLeftIsExtendsRight<T[Offset], C> extends true
   ? T[Offset]
@@ -174,7 +180,7 @@ type FindIndexHelper<
   C,
   Strict extends boolean = false,
   Offset extends number = 0
-> = Offset extends number.IntAddSingle<T["length"], 1>
+> = Offset extends T["length"]
   ? -1
   : common.And<common.IsEqual<T[Offset], C>, Strict> extends true
   ? Offset
