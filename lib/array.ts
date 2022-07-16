@@ -317,6 +317,24 @@ type SortHepler1<
 
 type Sort<T extends number[]> = SortHepler1<T>
 
+type Sort1Helper1<
+  T extends any[], 
+  Offset extends number = 0
+> = Offset extends T["length"] ? T : Sort1Helper1<Sort1Helper2<T>, number.IntAddSingle<Offset, 1>>
+
+type Sort1Helper2<T extends number[]> = T extends [infer X, infer Y, ...infer Rest]
+  ? number.Compare<X & number, Y & number> extends true
+    ? [Y, ...Sort1Helper1<[X, ...Rest]>]
+    : [X, ...Sort1Helper1<[Y, ...Rest]>]
+  : T
+
+/**
+ * 冒泡排序
+ * 使用递归的方式，支持30个左右的元组长度
+ */
+type Sort1<T extends number[]> = Sort1Helper1<T>
+
+
 type TupleKeysHelper<
   T extends unknown[],
   Offset extends number = 0
@@ -362,6 +380,7 @@ export type {
   Includes,
   Slice,
   Sort,
+  Sort1,
   TupleKeys,
   IndexOf,
   LastIndexOf,
