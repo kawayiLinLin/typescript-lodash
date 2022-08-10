@@ -330,9 +330,10 @@ type Sort1Helper2<T extends number[]> = T extends [infer X, infer Y, ...infer Re
 
 /**
  * 冒泡排序
- * 使用递归的方式，支持30个左右的元组长度
+ * 使用递归的方式，比 array.Sort 支持更多项的排序
+ * @see https://github.com/kawayiLinLin/typescript-lodash/pull/4
  */
-type Sort1<T extends number[]> = Sort1Helper1<T>
+type SortMany<T extends number[]> = Sort1Helper1<T>
 
 
 type TupleKeysHelper<
@@ -380,7 +381,7 @@ export type {
   Includes,
   Slice,
   Sort,
-  Sort1,
+  SortMany,
   TupleKeys,
   IndexOf,
   LastIndexOf,
