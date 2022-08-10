@@ -85,13 +85,16 @@ type EveryHelper<
   Check,
   Offset extends number = 0,
   CacheBool extends boolean = true
-> = T["length"] extends Offset
+> = common.Or<
+    number.IsEqual<T['length'], Offset>,
+    common.Not<CacheBool>
+  > extends true
   ? CacheBool
   : EveryHelper<
       T,
       Check,
       number.IntAddSingle<Offset, 1>,
-      common.And<common.CheckLeftIsExtendsRight<T[Offset], Check>, CacheBool>
+      common.CheckLeftIsExtendsRight<T[Offset], Check>
     >
 /** */
 type Every<T extends unknown[], Check> = T["length"] extends 0
@@ -103,13 +106,16 @@ type SomeHelper<
   Check,
   Offset extends number = 0,
   CacheBool extends boolean = false
-> = T["length"] extends Offset
+> = common.Or<
+    number.IsEqual<T['length'], Offset>,
+    CacheBool
+  > extends true
   ? CacheBool
   : SomeHelper<
       T,
       Check,
       number.IntAddSingle<Offset, 1>,
-      common.Or<common.CheckLeftIsExtendsRight<T[Offset], Check>, CacheBool>
+      common.CheckLeftIsExtendsRight<T[Offset], Check>
     >
 /** */
 type Some<T extends unknown[], Check> = SomeHelper<T, Check>
@@ -161,7 +167,7 @@ type FindHelper<
   T extends unknown[],
   C,
   Offset extends number = 0
-> = Offset extends number.IntAddSingle<T["length"], 1>
+> = Offset extends T["length"]
   ? null
   : common.CheckLeftIsExtendsRight<T[Offset], C> extends true
   ? T[Offset]
@@ -174,7 +180,7 @@ type FindIndexHelper<
   C,
   Strict extends boolean = false,
   Offset extends number = 0
-> = Offset extends number.IntAddSingle<T["length"], 1>
+> = Offset extends T["length"]
   ? -1
   : common.And<common.IsEqual<T[Offset], C>, Strict> extends true
   ? Offset
@@ -311,6 +317,24 @@ type SortHepler1<
 
 type Sort<T extends number[]> = SortHepler1<T>
 
+type Sort1Helper1<
+  T extends any[], 
+  Offset extends number = 0
+> = Offset extends T["length"] ? T : Sort1Helper1<Sort1Helper2<T>, number.IntAddSingle<Offset, 1>>
+
+type Sort1Helper2<T extends number[]> = T extends [infer X, infer Y, ...infer Rest]
+  ? number.Compare<X & number, Y & number> extends true
+    ? [Y, ...Sort1Helper1<[X, ...Rest]>]
+    : [X, ...Sort1Helper1<[Y, ...Rest]>]
+  : T
+
+/**
+ * 冒泡排序
+ * 使用递归的方式，支持30个左右的元组长度
+ */
+type Sort1<T extends number[]> = Sort1Helper1<T>
+
+
 type TupleKeysHelper<
   T extends unknown[],
   Offset extends number = 0
@@ -356,6 +380,7 @@ export type {
   Includes,
   Slice,
   Sort,
+  Sort1,
   TupleKeys,
   IndexOf,
   LastIndexOf,
