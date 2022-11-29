@@ -1,6 +1,6 @@
 {
   "name": "typescript-lodash",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "description": "A TypeScript Utility Types lib",
   "main": "./index",
   "module": "./index",
