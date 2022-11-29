@@ -52,6 +52,12 @@ interface DeepO {
 
 type ResultChainedAccessUnion = object.ChainedAccessUnion<DeepO>;
 
+type ResultObjectToUnion = object.ObjectToUnion<{
+  a: 1
+  b: 2
+  c: 3
+}>
+
 export type {
   ResultKeysToUnion,
   ResultGetterSetterPrefix,
@@ -66,5 +72,6 @@ export type {
   ResultMutable,
   ResultReadonlyPartial,
   ResultDeepPartial,
-  ResultChainedAccessUnion
+  ResultChainedAccessUnion,
+  ResultObjectToUnion
 };

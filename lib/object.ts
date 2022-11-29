@@ -77,6 +77,15 @@ type ChainedAccessUnionHelper<
   ? Exclude<keyof A | Exclude<Values<B>, never>, never>
   : never
 
+/**
+ * @see https://juejin.cn/post/7164407257151569956
+ */
+type ObjectToUnion<T> = Values<{
+  [Key in keyof T]: {
+    [Current in Key]: T[Current] 
+  }
+}>
+
 export type {
   KeysToTuple,
   KeysToUnion,
@@ -92,4 +101,5 @@ export type {
   DeepPartial,
   ReadonlyPartial,
   Mutable,
+  ObjectToUnion,
 }
