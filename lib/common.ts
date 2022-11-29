@@ -41,7 +41,8 @@ type CheckLeftIsExtendsRight<T extends any, R extends any> = T extends R
   : false
 
 /**
- * https://github.com/microsoft/TypeScript/issues/27024#issuecomment-510924206
+ * @see https://github.com/microsoft/TypeScript/issues/27024#issuecomment-510924206
+ * @description 判断类型严格相等
  */
 type IsEqual<A, B> = (<T>() => T extends A ? 1 : 2) extends <
   T1
@@ -50,6 +51,10 @@ type IsEqual<A, B> = (<T>() => T extends A ? 1 : 2) extends <
   : false
 
 type IsAny<T> = 0 extends 1 & T ? true : false
+
+type IsNever<T> = [T] extends [never] ? true : false
+
+type IsUnion<A, B = A> = A extends A ? ([B] extends [A] ? false : true) : never
 
 type SafeCheck<T> = T extends null | undefined | never ? false : true
 
@@ -61,12 +66,37 @@ type Nullable<T> = T | null | undefined
 
 type Many<T> = T | T[]
 
+/**
+ * @see https://juejin.cn/book/7047524421182947366/section/7048282437238915110#UnionToIntersection
+ * @description 联合类型转交叉类型
+ *
+ * 分布式条件类型 + 函数参数的逆变进行实现
+ */
+type UnionToIntersection<U> = (
+  U extends U ? (x: U) => unknown : never
+) extends (x: infer R) => unknown
+  ? R
+  : never
+
+/**
+ * @see https://juejin.cn/book/7047524421182947366/section/7061543892180533283#UnionToTuple
+ * @description 联合类型转元组
+ *
+ * 通过函数交叉类型进行重载、重载函数返回值类型为最后一个的特点，结合UnionToIntersection实现
+ */
+type UnionToTuple<T> = UnionToIntersection<
+  T extends any ? () => T : never
+> extends () => infer ReturnType
+  ? [...UnionToTuple<Exclude<T, ReturnType>>, ReturnType]
+  : []
+
 export type {
   Not,
   And,
   And3,
   And4,
   IsAny,
+  IsNever,
   Or,
   Or3,
   Or4,
@@ -76,5 +106,8 @@ export type {
   Diff,
   SumAggregate,
   Nullable,
-  Many
+  Many,
+  UnionToIntersection,
+  UnionToTuple,
+  IsUnion
 }
