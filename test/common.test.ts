@@ -18,6 +18,8 @@ type ResultSumAggregate = common.SumAggregate<1 | 2, 1 | 3>;
 
 type ResultNullable = common.Nullable<1>;
 
+type ResultMany = common.Many<string>
+
 export type {
   ResultAnd,
   ResultOr,
@@ -27,5 +29,6 @@ export type {
   ResultIsAny,
   ResultDiff,
   ResultSumAggregate,
-  ResultNullable
+  ResultNullable,
+  ResultMany
 };

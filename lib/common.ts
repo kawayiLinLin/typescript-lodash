@@ -59,6 +59,8 @@ type SumAggregate<T, U> = T | U
 
 type Nullable<T> = T | null | undefined
 
+type Many<T> = T | T[]
+
 export type {
   Not,
   And,
@@ -74,4 +76,5 @@ export type {
   Diff,
   SumAggregate,
   Nullable,
+  Many
 }
