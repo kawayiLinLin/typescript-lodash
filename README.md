@@ -1,6 +1,6 @@
 ### 写 TS 像写 JS 一样容易
 
-[![OSCS Status](https://www.oscs1024.com/platform/badge/kawayiLinLin/typescript-lodash.svg?size=small)](https://www.oscs1024.com/project/kawayiLinLin/typescript-lodash?ref=badge_small) [![NPM URL](https://img.shields.io/badge/npm-v6.14.12-1577b4)](https://www.npmjs.com/package/typescript-lodash) [![Typescript Limit](https://img.shields.io/badge/TypeScript->=4.5.0-1577b4)](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html) [![NPM URL](https://img.shields.io/badge/license-MIT-8fba29)](https://www.npmjs.com/package/typescript-lodash)
+[![OSCS Status](https://www.oscs1024.com/platform/badge/kawayiLinLin/typescript-lodash.svg?size=small)](https://www.oscs1024.com/project/kawayiLinLin/typescript-lodash?ref=badge_small) [![NPM URL](https://img.shields.io/badge/npm-v6.14.12-1577b4)](https://www.npmjs.com/package/typescript-lodash) [![Typescript Limit](https://img.shields.io/badge/TypeScript->=4.8.2-1577b4)](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html) [![NPM URL](https://img.shields.io/badge/license-MIT-8fba29)](https://www.npmjs.com/package/typescript-lodash)
 
 Make writing TypeScript as easy as writing JavaScript
 
