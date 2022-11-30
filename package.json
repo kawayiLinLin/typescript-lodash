@@ -36,7 +36,7 @@
   "author": "kawayilinlin",
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "^1.9.7",
-    "typescript": "^4.5.5"
+    "typescript": "^4.8.2",
+    "vuepress": "^1.9.7"
   }
 }

@@ -1,4 +1,5 @@
 import * as number from "../lib/number"
+import * as string from "../lib/string"
 
 type ResultIsZero = number.IsZero<-0>
 
@@ -22,6 +23,8 @@ type ResultToNumber = number.ToNumber<"9999">
 
 type ResultAdd = number.Add<"9007199254740991.12345", "9007199254740991.234567">
 
+type ResultParseFloat = number.ParseFloat<"-3.14159265358979300000000000">
+
 export type {
   ResultIsZero,
   ResultIsLessZero,
@@ -34,4 +37,5 @@ export type {
   ResultGetHalf,
   ResultToNumber,
   ResultAdd,
+  ResultParseFloat
 }

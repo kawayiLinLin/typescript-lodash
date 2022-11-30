@@ -12,9 +12,9 @@ type IsZero<N extends NumberLike> = common.CheckLeftIsExtendsRight<N, 0 | "0">
 type IsOverZero<N extends NumberLike> = IsZero<N> extends true
   ? false
   : common.CheckLeftIsExtendsRight<
-      string.Stringify<N> extends `${"-"}${infer Rest}` ? Rest : false,
-      false
-    >
+    string.Stringify<N> extends `${"-"}${infer Rest}` ? Rest : false,
+    false
+  >
 
 /**
  * number类型是否小于0
@@ -29,9 +29,24 @@ type IsFloat<
   OnlyCheckPoint extends boolean = true
 > = string.Stringify<N> extends `${infer Left}${"."}${infer Right}`
   ? OnlyCheckPoint extends true
-    ? true
-    : common.Not<array.Every<string.Split<Right>, "0">>
+  ? true
+  : common.Not<array.Every<string.Split<Right>, "0">>
   : false
+
+type ParseFloatRemoveZeroHelper<Int extends string> = Int extends `${infer Left}0` ? ParseFloatRemoveZeroHelper<Left> : Int
+
+
+type ParseFloatHelper<
+  N extends NumberLike,
+  StrN extends NumberLike = string.Stringify<N>,
+  NIsFloat = IsFloat<StrN, true>,
+  NLeftRight extends [string, string] = StrN extends `${infer Int}.${infer Float}` ? [Int, Float] : [string, string],
+  NRightWithoutTailZero = ParseFloatRemoveZeroHelper<NLeftRight[1]>,
+  ProcessedStr = NIsFloat extends true ? NRightWithoutTailZero extends '' ? NLeftRight[0] : `${NLeftRight[0]}.${NRightWithoutTailZero}` : StrN
+> = ProcessedStr extends `${infer Int extends number}` ? Int : never
+
+// 包含小数点结果最大17位，输入的小数部分的末尾可以加很多0
+type ParseFloat<N extends NumberLike> = ParseFloatHelper<N>
 
 /**
  * number类型是否是整数
@@ -81,10 +96,10 @@ type CompareHelper<
   A2 extends unknown[] = array.GetTuple<N2>
 > = IsNotEqual<N1, N2, true> extends true
   ? common.Or<IsZero<A1["length"]>, IsZero<A2["length"]>> extends true
-    ? IsZero<A1["length"]> extends true
-      ? false
-      : true
-    : CompareHelper<array.Pop<A1>["length"], array.Pop<A2>["length"]>
+  ? IsZero<A1["length"]> extends true
+  ? false
+  : true
+  : CompareHelper<array.Pop<A1>["length"], array.Pop<A2>["length"]>
   : false
 
 type Compare<N1 extends number, N2 extends number> = CompareHelper<N1, N2>
@@ -96,10 +111,10 @@ type IntMinusSingleAbsHelper<
   A2 extends unknown[] = array.GetTuple<N2>
 > = IsNotEqual<N1, N2, true> extends true
   ? common.Or<IsZero<A1["length"]>, IsZero<A2["length"]>> extends true
-    ? IsZero<A1["length"]> extends true
-      ? A2["length"]
-      : A1["length"]
-    : IntMinusSingleAbsHelper<array.Pop<A1>["length"], array.Pop<A2>["length"]>
+  ? IsZero<A1["length"]> extends true
+  ? A2["length"]
+  : A1["length"]
+  : IntMinusSingleAbsHelper<array.Pop<A1>["length"], array.Pop<A2>["length"]>
   : 0
 
 type IntMinusSingleAbs<
@@ -151,9 +166,9 @@ type ToNumberHelper<
   L extends any[] = []
 > = S extends `${infer F}${infer R}`
   ? ToNumberHelper<
-      R,
-      [...Make10Array<L>, ...(F extends keyof Map ? Map[F] : never)]
-    >
+    R,
+    [...Make10Array<L>, ...(F extends keyof Map ? Map[F] : never)]
+  >
   : L["length"]
 
 type ToNumber<S extends string> = ToNumberHelper<S>
@@ -351,19 +366,19 @@ type StepAdderHelper<
   CurrentWidthPreCurry extends `${Numbers}` = AddMap[Current["result"]][Curry]["result"]
 > = DataLeft["length"] extends DataRight["length"]
   ? `${Offset}` extends `${DataLeft["length"]}`
-    ? ResultCache
-    : StepAdderHelper<
-        DataLeft,
-        DataRight,
-        Current["add"],
-        NextOffset,
-        common.And<
-          number.IsEqual<Current["add"], "1">,
-          number.IsEqual<`${NextOffset}`, `${DataLeft["length"]}`>
-        > extends true
-          ? array.Push<["10", ...ResultCache], CurrentWidthPreCurry>
-          : array.Push<ResultCache, CurrentWidthPreCurry>
-      >
+  ? ResultCache
+  : StepAdderHelper<
+    DataLeft,
+    DataRight,
+    Current["add"],
+    NextOffset,
+    common.And<
+      number.IsEqual<Current["add"], "1">,
+      number.IsEqual<`${NextOffset}`, `${DataLeft["length"]}`>
+    > extends true
+    ? array.Push<["10", ...ResultCache], CurrentWidthPreCurry>
+    : array.Push<ResultCache, CurrentWidthPreCurry>
+  >
   : never
 
 type NumbersWidthCurry = Numbers | 10
@@ -383,8 +398,8 @@ type MergeResultHelper<
   >,
   FloatHasCurry extends boolean = FloatAdded[0] extends "10" ? true : false,
   DeleteCurryFloatResult extends unknown[] = FloatHasCurry extends true
-    ? array.Shift<FloatAdded>
-    : FloatAdded,
+  ? array.Shift<FloatAdded>
+  : FloatAdded,
   IntAdded extends `${NumbersWidthCurry}`[] = StepAdderHelper<
     LeftInt,
     RightInt,
@@ -392,22 +407,22 @@ type MergeResultHelper<
   >,
   IntHasCurry extends boolean = IntAdded[0] extends "10" ? true : false,
   DeleteCurryIntResult extends unknown[] = IntHasCurry extends true
-    ? array.Shift<IntAdded>
-    : IntAdded,
+  ? array.Shift<IntAdded>
+  : IntAdded,
   ResultReversed = array.Reverse<
     LeftFloat["length"] extends 0
-      ? DeleteCurryIntResult
-      : array.Concat<
-          [...DeleteCurryFloatResult, "."],
-          [...DeleteCurryIntResult]
-        >
+    ? DeleteCurryIntResult
+    : array.Concat<
+      [...DeleteCurryFloatResult, "."],
+      [...DeleteCurryIntResult]
+    >
   >,
   FloatResult = array.Join<
     ResultReversed extends string[]
-      ? IntHasCurry extends true
-        ? ["1", ...ResultReversed]
-        : ResultReversed
-      : never,
+    ? IntHasCurry extends true
+    ? ["1", ...ResultReversed]
+    : ResultReversed
+    : never,
     ""
   >
 > = FloatResult
@@ -433,5 +448,6 @@ export type {
   Compare,
   GetHalf,
   ToNumber,
-  Add
+  Add,
+  ParseFloat
 }
