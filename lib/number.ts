@@ -41,7 +41,7 @@ type ParseFloatHelper<
   StrN extends NumberLike = string.Stringify<N>,
   NIsFloat = IsFloat<StrN, true>,
   NLeftRight extends [string, string] = StrN extends `${infer Int}.${infer Float}` ? [Int, Float] : [string, string],
-  NRightWithoutTailZero = ParseFloatRemoveZeroHelper<NLeftRight[1]>,
+  NRightWithoutTailZero extends string = ParseFloatRemoveZeroHelper<NLeftRight[1]>,
   ProcessedStr = NIsFloat extends true ? NRightWithoutTailZero extends '' ? NLeftRight[0] : `${NLeftRight[0]}.${NRightWithoutTailZero}` : StrN
 > = ProcessedStr extends `${infer Int extends number}` ? Int : never
 
@@ -82,12 +82,54 @@ type IntAddSingleHepler<N1 extends number, N2 extends number> = [
  * 正整数（和0）加法，A1，A2最大999
  * @see https://juejin.cn/post/7050893279818317854#heading-8
  */
-type IntAddSingle<N1 extends number, N2 extends number> = IntAddSingleHepler<
+type IntAddSimple<N1 extends number, N2 extends number> = IntAddSingleHepler<
   N1,
   N2
 > extends number
   ? IntAddSingleHepler<N1, N2>
   : number
+
+type GetLeftRestAndRight<SN> = SN extends `${infer S}${Numbers}` ? SN extends `${S}${infer Last extends `${Numbers}`}` ? [S, Last] : never : never
+
+type IntIncreaseStepHelper<
+  LeftRest,
+  Last extends `${Numbers}`,
+  Cache extends string = '',
+  Add extends `${Numbers}` = '1',
+  ResultInfo extends AddMap[number][number] = AddMap[Last][Add],
+  Next extends [string, `${Numbers}`] = GetLeftRestAndRight<LeftRest>,
+> = LeftRest extends `${Numbers}` | ''
+  ? `${LeftRest extends '' 
+      ? '' 
+      : LeftRest extends `${Numbers}` 
+        ? `${AddMap[LeftRest][Add]['add'] extends '1' ? '1' : ''}${AddMap[LeftRest][Add]['result']}` 
+        : ''}${ResultInfo['result']}${Cache}`
+  : IntIncreaseStepHelper<
+      Next[0],
+      Next[1],
+      `${ResultInfo['result']}${Cache}`, 
+      ResultInfo['add']
+    >
+
+type a = IntIncreaseStepHelper<GetLeftRestAndRight<'99'>[0], GetLeftRestAndRight<'99'>[1]>
+/**
+ * SN 12345 L 1 R 2345
+ * SN 2345  L 2 R 345
+ * SN 345   L 3 R 45
+ * SN 45    L 4 R 5
+ */
+
+
+type IntIncreaseHelper<
+  N extends NumberLike,
+  StrN extends NumberLike = string.Stringify<N>,
+  NIsFloat = IsFloat<StrN, true>,
+  LeftRestAndRight extends [string, `${Numbers}`] = GetLeftRestAndRight<StrN>,
+  Result = NIsFloat extends true ? never : IntIncreaseStepHelper<LeftRestAndRight[0], LeftRestAndRight[1]>
+> = Result extends `${infer R extends number}` ? R : never
+
+type IntIncrease<N extends NumberLike> = IntAddSimple<`${N}`, 1>
+// IntIncreaseHelper<N>
 
 type CompareHelper<
   N1 extends number,
@@ -123,13 +165,13 @@ type IntMinusSingleAbs<
 > = IntMinusSingleAbsHelper<N1, N2>
 
 type GetHalfHelper<N extends number, Offset extends number = 0> = IsEqual<
-  IntAddSingle<Offset, Offset>,
+  IntAddSimple<Offset, Offset>,
   N
 > extends true
   ? Offset
-  : IsEqual<IntAddSingle<IntAddSingle<Offset, Offset>, 1>, N> extends true
-  ? IntAddSingle<Offset, 1>
-  : GetHalfHelper<N, IntAddSingle<Offset, 1>>
+  : IsEqual<IntAddSimple<IntAddSimple<Offset, Offset>, 1>, N> extends true
+  ? IntAddSimple<Offset, 1>
+  : GetHalfHelper<N, IntAddSimple<Offset, 1>>
 
 // 获取当前数的一半
 type GetHalf<N extends number> = GetHalfHelper<N>
@@ -361,7 +403,7 @@ type StepAdderHelper<
   Curry extends `${Numbers}` = `${0}`,
   Offset extends number = 0,
   ResultCache extends `${number}`[] = [],
-  NextOffset extends number = number.IntAddSingle<Offset, 1>,
+  NextOffset extends number = number.IntAddSimple<Offset, 1>,
   Current extends AddMap[Numbers][Numbers] = AddMap[DataLeft[Offset]][DataRight[Offset]],
   CurrentWidthPreCurry extends `${Numbers}` = AddMap[Current["result"]][Curry]["result"]
 > = DataLeft["length"] extends DataRight["length"]
@@ -443,7 +485,8 @@ export type {
   IsInt,
   IsEqual,
   IsNotEqual,
-  IntAddSingle,
+  IntIncrease,
+  IntAddSimple,
   IntMinusSingleAbs,
   Compare,
   GetHalf,

@@ -13,7 +13,9 @@ type ResultIsFloat = number.IsFloat<1.0, false>
 
 type ResultIsEqual = number.IsEqual<1, 1>
 
-type ResultIntAdd = number.IntAddSingle<999, 999>
+type ResultIntIncrease = number.IntIncrease<9999999>
+
+type ResultIntAddSimple = number.IntAddSimple<999, 999>
 
 type ResultCompare = number.Compare<999, 998>
 
@@ -32,7 +34,8 @@ export type {
   ResultIsInt,
   ResultIsFloat,
   ResultIsEqual,
-  ResultIntAdd,
+  ResultIntIncrease,
+  ResultIntAddSimple,
   ResultCompare,
   ResultGetHalf,
   ResultToNumber,

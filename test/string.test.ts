@@ -20,7 +20,7 @@ type ResultReplace = string.Replace<"我讨厌你", "讨厌", "爱">
 
 type ResultReplaceAll = string.ReplaceAll<"想见你想见你只想见你", "你", "我">
 
-type ResultRepeat = string.Repeat<"❤️", 9>
+type ResultRepeat = string.Repeat<"❤️", 8>
 
 type ResultPadStart = string.PadStart<"前面有空格", 6>
 

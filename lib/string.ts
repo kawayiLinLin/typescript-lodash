@@ -119,8 +119,8 @@ type LastIndexOfHelper<
   ? LastIndexOfHelper<
       Replace<S1, S2, SubString<S2, 1, GetStringLength<S2>>>,
       S2,
-      number.IntAddSingle<GetStringLength<Left>, AddOffset>,
-      number.IntAddSingle<AddOffset, 1>
+      number.IntAddSimple<GetStringLength<Left>, AddOffset>,
+      number.IntAddSimple<AddOffset, 1>
     >
   : Index
 
@@ -170,7 +170,7 @@ type RepeatHelper<
       S,
       Times,
       OriginStr,
-      number.IntAddSingle<Offset, 1>
+      number.IntAddSimple<Offset, 1>
     >}`
 
 /**
@@ -197,7 +197,7 @@ type PadHelper<
         FillS,
         IsStart,
         Len,
-        number.IntAddSingle<Offset, 1>
+        number.IntAddSimple<Offset, 1>
       >
   : S
 
@@ -243,7 +243,7 @@ type SubStr<
   S extends string,
   Start extends number,
   Len extends number
-> = SubStringHelper<S, Start, number.IntAddSingle<Start, Len>>
+> = SubStringHelper<S, Start, number.IntAddSimple<Start, Len>>
 
 type SubStringHelper<
   S extends string,
@@ -257,7 +257,7 @@ type SubStringHelper<
       S,
       Start,
       End,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       common.And3<
         common.Or<number.Compare<Offset, Start>, number.IsEqual<Offset, Start>>,
         common.Or<number.Compare<End, Offset>, number.IsEqual<Offset, End>>,

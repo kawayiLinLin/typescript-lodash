@@ -42,7 +42,7 @@ type ResultFlat = array.Flat<[1, [2, [3], 4]]>
 
 type ResultIncludes = array.Includes<[1, 2, 3, "2"], string>
 
-type ResultSlice = array.Slice<[1, 2, 3, 4, 5], 0, 2>
+type ResultSlice = array.Slice<[1, 2, 3], 0, 2>
 
 type ResultSort = array.Sort<[2, 1]>
 

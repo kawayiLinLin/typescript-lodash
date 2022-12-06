@@ -22,7 +22,7 @@ type SetHelper<
       T,
       Index,
       Value,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       Push<Cache, Offset extends Index ? Value : T[Offset]>
     >
 
@@ -93,7 +93,7 @@ type EveryHelper<
   : EveryHelper<
       T,
       Check,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       common.CheckLeftIsExtendsRight<T[Offset], Check>
     >
 /** */
@@ -114,7 +114,7 @@ type SomeHelper<
   : SomeHelper<
       T,
       Check,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       common.CheckLeftIsExtendsRight<T[Offset], Check>
     >
 /** */
@@ -130,7 +130,7 @@ type FillHelper<
   ? common.IsEqual<T, F[]> extends true /** any[] -> T[] */
     ? T
     : F[]
-  : FillHelper<array.Push<array.Shift<T>, F>, F, number.IntAddSingle<Offset, 1>>
+  : FillHelper<array.Push<array.Shift<T>, F>, F, number.IntAddSimple<Offset, 1>>
 /** */
 type Fill<T extends unknown[], F = undefined> = FillHelper<T, F>
 
@@ -146,7 +146,7 @@ type FilterHelper<
       T,
       C,
       Strict,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       common.And<Strict, common.IsEqual<T[Offset], C>> extends true
         ? array.Push<Cache, T[Offset]>
         : common.And<
@@ -171,7 +171,7 @@ type FindHelper<
   ? null
   : common.CheckLeftIsExtendsRight<T[Offset], C> extends true
   ? T[Offset]
-  : FindHelper<T, C, number.IntAddSingle<Offset, 1>>
+  : FindHelper<T, C, number.IntAddSimple<Offset, 1>>
 /** */
 type Find<T extends unknown[], C> = FindHelper<T, C>
 
@@ -189,7 +189,7 @@ type FindIndexHelper<
       common.Not<Strict>
     > extends true
   ? Offset
-  : FindIndexHelper<T, C, Strict, number.IntAddSingle<Offset, 1>>
+  : FindIndexHelper<T, C, Strict, number.IntAddSimple<Offset, 1>>
 /** */
 type FindIndex<
   T extends unknown[],
@@ -203,7 +203,7 @@ type ReverseHelper<
   Cache extends unknown[] = []
 > = Cache["length"] extends T["length"]
   ? Cache
-  : ReverseHelper<T, number.IntAddSingle<Offset, 1>, UnShift<Cache, T[Offset]>>
+  : ReverseHelper<T, number.IntAddSimple<Offset, 1>, UnShift<Cache, T[Offset]>>
 /** */
 type Reverse<T extends unknown[]> = ReverseHelper<T>
 /** */
@@ -223,7 +223,7 @@ type MapWidthIndexHelper<
   ? Cache
   : MapWidthIndexHelper<
       T,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       Push<Cache, IndexMappedItem<T[Offset], Offset, T>>
     >
 
@@ -245,7 +245,7 @@ type FlatHelper<
   ? Cache
   : FlatHelper<
       T,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       T[Offset] extends unknown[]
         ? Concat<Cache, T[Offset]>
         : Push<Cache, T[Offset]>
@@ -270,7 +270,7 @@ type SliceHelper<
       T,
       Start,
       End,
-      number.IntAddSingle<Offset, 1>,
+      number.IntAddSimple<Offset, 1>,
       common.And3<
         common.Or<number.Compare<Offset, Start>, number.IsEqual<Offset, Start>>,
         common.Or<number.Compare<End, Offset>, number.IsEqual<Offset, End>>,
@@ -293,21 +293,21 @@ type SortHepler2<
   T extends number[],
   Offset extends number = 0,
   Offset1 extends number = 0,
-  Offset1Added extends number = number.IntAddSingle<Offset1, 1>,
+  Offset1Added extends number = number.IntAddSimple<Offset1, 1>,
   Seted1 extends unknown[] = ArraySet<T, Offset1Added, T[Offset1]>,
   Seted2 extends unknown[] = ArraySet<Seted1, Offset1, T[Offset1Added]>
-> = number.IntAddSingle<
-  number.IntAddSingle<Offset, Offset1>,
+> = number.IntAddSimple<
+  number.IntAddSimple<Offset, Offset1>,
   1
 > extends T["length"]
-  ? SortHepler1<T, number.IntAddSingle<Offset, 1>>
+  ? SortHepler1<T, number.IntAddSimple<Offset, 1>>
   : SortHepler2<
       number.Compare<T[Offset1], T[Offset1Added]> extends true
         ? Seted2 extends number[]
           ? Seted2
           : never
         : T,
-      number.IntAddSingle<Offset1, 1>
+      number.IntAddSimple<Offset1, 1>
     >
 
 type SortHepler1<
@@ -320,7 +320,7 @@ type Sort<T extends number[]> = SortHepler1<T>
 type Sort1Helper1<
   T extends any[], 
   Offset extends number = 0
-> = Offset extends T["length"] ? T : Sort1Helper1<Sort1Helper2<T>, number.IntAddSingle<Offset, 1>>
+> = Offset extends T["length"] ? T : Sort1Helper1<Sort1Helper2<T>, number.IntAddSimple<Offset, 1>>
 
 type Sort1Helper2<T extends number[]> = T extends [infer X, infer Y, ...infer Rest]
   ? number.Compare<X & number, Y & number> extends true
@@ -341,7 +341,7 @@ type TupleKeysHelper<
   Offset extends number = 0
 > = Offset extends T["length"]
   ? T
-  : TupleKeysHelper<ArraySet<T, Offset, Offset>, number.IntAddSingle<Offset, 1>>
+  : TupleKeysHelper<ArraySet<T, Offset, Offset>, number.IntAddSimple<Offset, 1>>
 
 type TupleKeys<T extends unknown[]> = TupleKeysHelper<T>
 
