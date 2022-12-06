@@ -128,8 +128,7 @@ type IntIncreaseHelper<
   Result = NIsFloat extends true ? never : IntIncreaseStepHelper<LeftRestAndRight[0], LeftRestAndRight[1]>
 > = Result extends `${infer R extends number}` ? R : never
 
-type IntIncrease<N extends NumberLike> = IntAddSimple<`${N}`, 1>
-// IntIncreaseHelper<N>
+type IntIncrease<N extends NumberLike> = IntIncreaseHelper<N>
 
 type CompareHelper<
   N1 extends number,

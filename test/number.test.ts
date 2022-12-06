@@ -13,7 +13,7 @@ type ResultIsFloat = number.IsFloat<1.0, false>
 
 type ResultIsEqual = number.IsEqual<1, 1>
 
-type ResultIntIncrease = number.IntIncrease<9999999>
+type ResultIntIncrease = number.IntIncrease<'9999999'>
 
 type ResultIntAddSimple = number.IntAddSimple<999, 999>
 
